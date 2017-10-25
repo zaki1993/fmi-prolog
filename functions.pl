@@ -89,7 +89,7 @@ min([X], X).
 min([H|T], S):- min(T, S), less(S, H).
 min([H|T], H):- min(T, S), not(less(S, H)).
 
-%max(X, L).
+% max(X, L).
 max([X], X).
 max([H|T], H):- max(T, P), less(P, H).
 max([H|T], P):- max(T, P), not(less(P, H)).
@@ -98,9 +98,20 @@ max([H|T], P):- max(T, P), not(less(P, H)).
 selsort([], []).
 selsort(L, [M|S]):-min(L, M), remove(M, L, N), selsort(N, S).
 
+% tree (L, X, R).
+% empty = empty tree
 
+% treeadd(X, T, T1).
+treeadd(X, empty, tree(empty, X, empty).
+treeadd(X, tree(L, T, R), tree(L1, T, R)):- less(X, T),treeadd(X, L, L1).
+treeadd(X, tree(L, T, R), tree(L, T, R1)):- not(less(X, T)), treeadd(X, R, R1). 
 
+% maketree(LST, TREE).
+maketree([], empty).
+maketree([H|T], P):-maketree(T, P1), treeadd(H, P1, P).
 
+% preorder(T, LST).
+preorder(tree(L, T, R), LST):- preorder(L, L1), preorder(R, R1), append(L1, [T|L2], LST).
 
 
 
