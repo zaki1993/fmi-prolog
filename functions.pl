@@ -84,7 +84,7 @@ split2(X, [H|T], A, [H|B]):-not(less(H, X)), split2(X, T, A, B).
 qsort([], []).
 qsort([H|T], S):- split2(H, T, L, R), qsort(L, S1), qsort(R, S2), append(S1, [H|S2], S).
 
-% min(X, L).
+% min(L, X).
 min([X], X).
 min([H|T], S):- min(T, S), less(S, H).
 min([H|T], H):- min(T, S), not(less(S, H)).
@@ -102,7 +102,7 @@ selsort(L, [M|S]):-min(L, M), remove(M, L, N), selsort(N, S).
 % empty = empty tree
 
 % treeadd(X, T, T1).
-treeadd(X, empty, tree(empty, X, empty).
+treeadd(X, empty, tree(empty, X, empty)).
 treeadd(X, tree(L, T, R), tree(L1, T, R)):- less(X, T),treeadd(X, L, L1).
 treeadd(X, tree(L, T, R), tree(L, T, R1)):- not(less(X, T)), treeadd(X, R, R1). 
 
@@ -111,16 +111,7 @@ maketree([], empty).
 maketree([H|T], P):-maketree(T, P1), treeadd(H, P1, P).
 
 % preorder(T, LST).
-preorder(tree(L, T, R), LST):- preorder(L, L1), preorder(R, R1), append(L1, [T|L2], LST).
+preorder(empty, []).
+preorder(tree(L, T, R), LST):- preorder(L, L1), preorder(R, R1), append(L1, [T|R1], LST).
 
-
-
-
-
-
-
-
-
-
-
-
+tsort(L, S):- maketree(L, T), preorder(T, S).
