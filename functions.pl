@@ -149,7 +149,7 @@ bogosort(S, L):- perm(S, L), sorted(S).
 
 % n(N).
 n(0).
-n(X):-n(Y), X is Y + 1.
+n(X):- n(Y), X is Y + 1.
 
 % z(N).
 z(0).
@@ -165,5 +165,13 @@ o1(X):- n(X), X mod 2 =:= 1.
 % e(N).
 e(X):- n(X), X mod 2 =:= 0.
 
+% between(X, A, B).
+between(A, A, B).
+between(X, A, B):- A < B, P is A + 1, between(X, P, B).
 
+% npair(X, Y).
+npair(X, Y):-n(A), between(X, 0, A), Y is A - X.
+
+% zpair(X, Y).
+zpair(X, Y):- npair(X1, Y1), member(C1, [1, -1]), member(D1, [1, -1]), X is X1 + C1, Y is Y1 + D1.
 
