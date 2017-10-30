@@ -114,4 +114,56 @@ maketree([H|T], P):-maketree(T, P1), treeadd(H, P1, P).
 preorder(empty, []).
 preorder(tree(L, T, R), LST):- preorder(L, L1), preorder(R, R1), append(L1, [T|R1], LST).
 
+% tsort(T, L).
 tsort(L, S):- maketree(L, T), preorder(T, S).
+
+% prefix(L, X).
+prefix([], []).
+prefix([H|T], [H|S]):-prefix(T, S).
+
+% prefix1(L, X).
+prefix1(L, X):- append(X, _, L).
+
+% sufix(L, X).
+sufix(L, X):-append(_, X, L).
+
+% infix(L, X).
+infix(L, X):- append(S, _, L), append(_, X, S);
+
+% subset(L, S).
+subset(L, []).
+subset([H|T], S):-subset(T, S).
+subset([H|T], [H|T1]):- subset(T, T1).
+
+% subset1(L, X).
+subset1([], L).
+subset1([H|T], L):-append(_, [H|B], L), subset(T, B).
+
+% sorted(L).
+sorted([]).
+sorted([_]).
+sorted([A,B|T]):-less(A, B), sorted([B|T]).
+
+% bogosort(L).
+bogosort(S, L):- perm(S, L), sorted(S).
+
+% n(N).
+n(0).
+n(X):-n(Y), X is Y + 1.
+
+% z(N).
+z(0).
+z(X):-n(Y), Y > 0, member(P, [1,-1]), X is Y * P.
+
+% o(N).
+o(1).
+o(X):- o(Y), X is Y + 2.
+
+% o1(N).
+o1(X):- n(X), X mod 2 =:= 1.
+
+% e(N).
+e(X):- n(X), X mod 2 =:= 0.
+
+
+
