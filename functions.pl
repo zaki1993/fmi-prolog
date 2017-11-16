@@ -173,5 +173,85 @@ between(X, A, B):- A < B, P is A + 1, between(X, P, B).
 npair(X, Y):-n(A), between(X, 0, A), Y is A - X.
 
 % zpair(X, Y).
-zpair(X, Y):- npair(X1, Y1), member(C1, [1, -1]), member(D1, [1, -1]), X is X1 + C1, Y is Y1 + D1.
+zpair(X, Y):- npair(X1, Y1), member(C1, [1, -1]), member(D1, [1, -1]), X is X1 * C1, Y is Y1 * D1.
 
+% norg(N, L).
+% n(0, []).
+% n(N, [H|T]):- N > 0, between(H, 0, S), S1 is S - H, N1 is N - 1, n(N1, T, S1).
+
+% n(N, L, S).
+% n(N, L):-n(S), n(N, L, S).
+
+% sumN(L, N).
+sumN([H|T], N):- n(H), n(P), H is N - P, sumN(T, N). 
+
+% nSumOf4QubeN(N).
+nSumOf4QubeN(N):- between(X1, 0, 31), between(X2, 0, 31), between(X3, 0, 31), between(X4, 0, 31), N is X1 * X1 + X2 * X2 + X3 * X3 + X4 * X4.
+
+% group(L, G).
+group([], []).
+group([H], [[H]]).
+group([H|[H|T]], [[H|F]|G]):- group([H|T], [F|G]).
+group([H|[X|T]], [[H]|G]):- H\=X, group([X|T], G).
+
+% graph([V, E]).
+
+% empty graph
+empty([[], []]).
+
+% edge(G, X, Y).
+edge([V, E], X, Y):- member([X, Y], E); member([Y, X], E).
+
+% dfs(X).
+% dfs(X):- goal(X).
+% dfs(X):- edge(X, Y), dfs(Y).
+
+% path (G, X, Y, P).
+pathVertices(G, V, X, X, [X|V]).
+pathVertices(G, V, X, Y, P):- edge(G, X, X1), not(member(X1, V)), pathVertices(G, [X|V], X1, Y, P).
+pathVertices(G, X, Y, P):- pathVertices(G, [], X, Y, Q), reverse2(Q, P).
+
+pathEdges(G, V, X, X, V).
+pathEdges(G, V, X, Y, P):- edge(G, X, X1), not(member(X1, V)), pathEdges(G, [[X, X1]|V], X1, Y, P).
+pathEdges(G, X, Y, P):- pathEdges(G, [], X, Y, Q), reverse2(Q, P).
+
+% tree
+treeGen(0, []).
+treeGen(N, [A, B]):- N > 0, N1 is N - 1, between(X, 0, N1), Y is N1 - X, treeGen(X, A), treeGen(Y, B).
+treeGen(X):- n(P), treeGen(P, X).
+
+% sums
+sums(0, []).
+sums(N, [H|T]):- between(H, 0, N), N1 is N - H, sums(N1, T).
+sumsGen(X):- n(P), sums(P, X).
+
+% nlist
+nlist(M, 0, []).
+nlist(M, N, [H|T]):- between(H, 0, M), N1 is N - 1, nlist(M, N1, T).
+
+% nlistGen
+nlistGen(X):- n(P), nlist(10, P, X).
+
+% isDivisor(N, P).
+isDivisor(N, P):- N mod P =:= 0.
+
+% isPrime
+isPrime(2).
+isPrime(N):- N > 1, N1 is N - 1, not((between(P, 2, N1), N mod P =:= 0)).
+
+% pd(A, X).
+pd(A, X):- between(X, 2, A), isPrime(X), isDivisor(A, X).
+
+% pdc(A, B).
+pdc(A, B):- not((pd(A, X), not(pd(B, X)))).
+
+% p(A, B).
+p(A, B):- pdc(A, B), pdc(B, A).
+
+% transponse 
+
+transponse([[]|_], []).
+transponse(M, [H|T]):- transp(M, H, M1), transponse(M1, T).
+
+transp([], [], []).
+transp([[H|T]|L], [H|T1], [T|L1]):- transp(L, T1, L1).	
