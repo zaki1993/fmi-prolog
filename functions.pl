@@ -255,3 +255,14 @@ transponse(M, [H|T]):- transp(M, H, M1), transponse(M1, T).
 
 transp([], [], []).
 transp([[H|T]|L], [H|T1], [T|L1]):- transp(L, T1, L1).	
+
+detelina(E):- perm(P, E), append(A, D, P), append(B, C, D), c(A), c(B), c(C), v(A, X), v(B, X), v(C, X), not((v(A, Y), v(B, Y), v(C, Y), not(X=Y))).
+v(A, X):- member(P, A), member(X, P).
+c(A):-remove([X, Y], A, P), path(P,  Y, X, Q), len(P, X), len(Q, X).
+
+dekartovo([], []).
+dekartovo([H|T], [H1|S]):- member(H1, H), dekartovo(T, S).
+
+startNumGen(N, FN):- n(N), startWith(N, FN), isPrime(N).
+startWith(N, N).
+startWith(N, X):- N > X, N1 is N // 10, startWith(N1, X). 
